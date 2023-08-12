@@ -3,6 +3,7 @@
 import { GetProducts } from '@/actions/products'
 import Menu from '@/components/menu'
 import { Button } from '@/components/ui/button'
+import useVendorId from '@/hooks/useVendorId'
 import getImageLink from '@/utils/getImageLink'
 import pb from '@/utils/pocketbase'
 import { useQuery } from '@tanstack/react-query'
@@ -13,7 +14,7 @@ type Props = {}
 
 const Page = (props: Props) => {
 
-  const [vendorId, setVendorId] = useState<string | null>(null)
+  const { vendorId } = useVendorId();
 
   const { data, isLoading, isFetching, error } = useQuery({
     queryKey: ["hydrate-users"],
@@ -38,10 +39,6 @@ const Page = (props: Props) => {
   }, [data])
 
   const productsData = useMemo(() => sanitizedData(), [sanitizedData])
-
-  useEffect(() => {
-    setVendorId(localStorage?.getItem("vendor"))
-  }, [])
 
   return (
     <div className='w-full'>

@@ -6,6 +6,7 @@ import ReportSalesGraph from '@/components/admin/Dashboard/ReportSalesGraph'
 import TargetSales from '@/components/admin/Dashboard/TargetSales'
 import TopSales from '@/components/admin/Dashboard/TopSales'
 import TopSalesChart from '@/components/admin/Dashboard/TopSalesChart'
+import useVendorId from '@/hooks/useVendorId'
 import { useQuery } from '@tanstack/react-query'
 import React, { useEffect, useState } from 'react'
 
@@ -13,7 +14,7 @@ type Props = {}
 
 const Page = (props: Props) => {
 
-  const [vendorId, setVendorId] = useState<string | null>(null)
+  const { vendorId } = useVendorId();
 
   const { data, isLoading, isFetching, error } = useQuery({
     queryKey: ["hydrate-dashboard"],
@@ -27,10 +28,6 @@ const Page = (props: Props) => {
       unSubscribeOrdersSocket()
     }
   }, [data])
-
-  useEffect(() => {
-    setVendorId(localStorage?.getItem("vendor"))
-  }, [])
 
   return (
     <div className='flex flex-col gap-5'>

@@ -7,14 +7,16 @@ import GridContainer from "@/components/gridContainer"
 import { useQuery } from "@tanstack/react-query"
 import getImageLink from "@/utils/getImageLink"
 import { BottomDrawer } from "@/components/bottomDrawer"
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import { GetProducts } from "@/actions/products"
 import useInput from "@/hooks/useInput"
+import useVendorId from "@/hooks/useVendorId"
 
 export default function IndexPage() {
   const [openDrawer, setOpenDrawer] = useState(false);
   const [product, setProduct] = useState({});
-  const [vendorId, setVendorId] = useState<string | null>(null)
+  //@ts-ignore
+  const { vendorId } = useVendorId();
   const { value: search, onChange: setSearch } = useInput();
 
   const { data, isLoading, isFetching, error } = useQuery({
@@ -30,10 +32,6 @@ export default function IndexPage() {
     image_url: getImageLink(menu?.expand?.image_url as any),
     addons: menu?.expand?.addons_id ?? []
   }))
-
-  useEffect(() => {
-    setVendorId(localStorage?.getItem("vendor"))
-  }, [])
 
   return (
     <>

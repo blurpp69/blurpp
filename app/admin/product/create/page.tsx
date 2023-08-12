@@ -10,18 +10,20 @@ import { useMutation } from "@tanstack/react-query"
 import { CreateProduct } from "@/actions/products"
 import { useRouter } from "next/navigation"
 import { toast } from "@/components/ui/use-toast"
+import useVendorId from "@/hooks/useVendorId"
 
 type Props = {}
 
 const Page = (props: Props) => {
   const router = useRouter()
   const { mutateAsync: createProduct, isLoading, isError } = useMutation(CreateProduct)
+  const { vendorId } = useVendorId()
 
   const [product, setProduct] = useState({
     product_name: "",
     product_price: 0,
     image_url: "",
-    vendor_id: localStorage?.getItem("vendor"),
+    vendor_id: vendorId,
   })
 
   const createProductAction = async () => {

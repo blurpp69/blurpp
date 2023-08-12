@@ -36,6 +36,8 @@
     --radius: 0.5rem;
 
     --admin: 252, 8%, 12%, 1;
+    --font-sans: 'Inter', sans-serif;
+    --font-mono: 'JetBrains Mono', monospace;
   }
 
   /* .dark {
@@ -76,14 +78,15 @@
   * {
     @apply border-border;
   }
+
   body {
     @apply bg-background text-foreground;
     font-feature-settings: "rlig" 1, "calt" 1;
   }
-  html, body {
+
+  html,
+  body {
     width: 100% !important;
     /* height: 100% !important; */
   }
 }
-
-
