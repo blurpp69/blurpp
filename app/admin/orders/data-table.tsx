@@ -18,12 +18,16 @@ import {
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
-  data: TData[]
+  data: TData[],
+  setOpened: (value: boolean) => void,
+  setOrderId: (value: string) => void,
 }
 
 export function DataTable<TData, TValue>({
   columns,
   data,
+  setOpened,
+  setOrderId,
 }: DataTableProps<TData, TValue>) {
   const table = useReactTable({
     data,
@@ -56,11 +60,20 @@ export function DataTable<TData, TValue>({
           {table.getRowModel().rows?.length ? (
             table.getRowModel().rows.map((row) => (
               <TableRow
+                className="cursor-pointer"
                 key={row.id}
                 data-state={row.getIsSelected() && "selected"}
               >
                 {row.getVisibleCells().map((cell) => (
-                  <TableCell key={cell.id}>
+                  <TableCell key={cell.id}
+                    onClick={() => {
+                      if (cell?.column?.id === "select") return
+                      //@ts-ignore
+                      const orderId = cell.row?.original?.id ?? ''
+                      setOrderId(orderId)
+                      setOpened(true)
+                    }}
+                  >
                     {flexRender(cell.column.columnDef.cell, cell.getContext())}
                   </TableCell>
                 ))}

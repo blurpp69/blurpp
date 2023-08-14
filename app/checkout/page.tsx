@@ -74,6 +74,7 @@ export default function Page() {
             quantity={item?.quantity}
             addToCart={() => addToCart(item)}
             removeFromCart={() => removeCart(item)}
+            showActions={true}
           />
         ))}
       </div>
