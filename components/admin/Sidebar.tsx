@@ -32,7 +32,8 @@ const LinkItems: Array<LinkItemProps> = [
       { name: 'Dashboard', icon: <Icons.dashboard />, href: '/admin/dashboard' },
       { name: 'Outlet', icon: <Icons.outlet />, href: '/admin/outlet' },
       { name: 'Report', icon: <Icons.report />, href: '/admin/report' },
-      { name: 'Orders', icon: <Icons.categories />, href: '/admin/orders' }
+      { name: 'Orders', icon: <Icons.categories />, href: '/admin/orders' },
+      { name: 'Tables', icon: <Icons.categories />, href: '/admin/tables' }
     ],
   },
   {
