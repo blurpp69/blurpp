@@ -28,7 +28,11 @@ export function CreateTable(props: Props) {
   const { value: number, onChange: setNumber } = useInput();
   const { vendorId } = useVendorId();
 
-  const { mutateAsync: create, isLoading, isError } = useMutation(createTable)
+  const { mutateAsync: create, isLoading, isError } = useMutation(createTable, {
+    onSuccess: () => {
+      props.onOpenChange?.(false);
+    }
+  })
 
   const onSubmit = async () => {
     if (!vendorId) return
@@ -37,7 +41,7 @@ export function CreateTable(props: Props) {
       name,
       seat: parseInt(number),
       vendor_id: vendorId
-    })
+    });
   }
 
   return (
