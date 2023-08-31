@@ -3,21 +3,21 @@
 import { useQuery } from "@tanstack/react-query";
 import { Payment, columns } from "./columns"
 import { DataTable } from "./data-table"
-import { getOrders } from "@/actions/orders";
+import { getTables } from "@/actions/tables";
 import React, { useCallback, useEffect, useMemo } from 'react'
 import useVendorId from "@/hooks/useVendorId";
 import { Button } from "@/components/ui/button";
 import SideDrawer from "./sidedrawer";
+import { CreateTable } from "./create-table";
 
 export default function Page() {
   const { vendorId } = useVendorId();
   const [page, setPage] = React.useState(1);
   const [open, setOpen] = React.useState(false);
-  const [orderId, setOrderId] = React.useState<string | undefined>(undefined);
 
   const { data, isLoading, isFetching, error, refetch } = useQuery({
     queryKey: ["hydrate-orders"],
-    queryFn: () => getOrders(vendorId ?? '', page),
+    queryFn: () => getTables(vendorId ?? ''),
     enabled: !!vendorId,
     keepPreviousData: true,
   });
@@ -27,7 +27,7 @@ export default function Page() {
     return data?.items?.map((item: any) => {
       return {
         ...item,
-        table_name: item?.expand?.table_id?.name ?? '-',
+        table_name: item?.name ?? '-',
       }
     })
   }, [data])
@@ -42,18 +42,12 @@ export default function Page() {
   return (
     <div className="">
       <div className="flex justify-end mb-10">
-        <Button variant={'admin'}>Create Table</Button>
+        <Button variant={'admin'} onClick={() => setOpen(true)}>Create Table</Button>
       </div>
+      <CreateTable open={open} onOpenChange={(value: boolean) => setOpen(value)} />
       <DataTable
         columns={columns}
         data={sanitizedData as any ?? []}
-        setOpened={setOpen}
-        setOrderId={setOrderId}
-      />
-      <SideDrawer
-        id={orderId ?? ''}
-        open={open}
-        onOpenChange={setOpen}
       />
       <div className="flex justify-end my-5 gap-5">
         <Button
