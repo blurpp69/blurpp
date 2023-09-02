@@ -23,15 +23,18 @@ import {
 } from "@/components/ui/table"
 import { useState } from "react"
 import React from "react"
+import tableStore from "@/state/admin/tables.store"
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
   data: TData[],
+  deleteModal?: any
 }
 
 export function DataTable<TData, TValue>({
   columns,
   data,
+  deleteModal
 }: DataTableProps<TData, TValue>) {
 
   const [showCreateModal, setShowCreateModal] = useState(false);
@@ -42,7 +45,7 @@ export function DataTable<TData, TValue>({
   )
   const [columnVisibility, setColumnVisibility] =
     useState<VisibilityState>({})
-  const [rowSelection, setRowSelection] = useState({})
+  const [rowSelection, setRowSelection] = useState({});
 
   const table = useReactTable({
     data,
@@ -61,6 +64,12 @@ export function DataTable<TData, TValue>({
       columnVisibility,
       rowSelection,
     },
+    meta: {
+      setSelectedRows: (id: string) => {
+        tableStore.setState({ selectedId: id })
+        deleteModal?.()
+      },
+    }
   })
 
   return (

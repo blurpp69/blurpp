@@ -21,6 +21,7 @@ import { useMutation } from "@tanstack/react-query";
 type Props = {
   open: boolean
   onOpenChange?: (open: boolean) => void
+  refetch?: () => Promise<any>
 }
 
 export function CreateTable(props: Props) {
@@ -41,7 +42,9 @@ export function CreateTable(props: Props) {
       name,
       seat: parseInt(number),
       vendor_id: vendorId
-    });
+    }).then(async () => {
+      return props.refetch?.()
+    })
   }
 
   return (

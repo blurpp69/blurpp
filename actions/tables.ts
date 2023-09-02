@@ -31,4 +31,12 @@ export async function createTable(table: Table) {
   } catch (error) {
     console.log(error)  
   }
+};
+
+export async function deleteTable(tableId: string) {
+  try {
+    return pb.collection(Collections.Tables).delete(tableId);
+  } catch (error) {
+    console.log(error)  
+  }
 }

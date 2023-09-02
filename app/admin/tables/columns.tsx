@@ -3,7 +3,6 @@
 import { ColumnDef } from "@tanstack/react-table"
 import { MoreHorizontal } from "lucide-react"
 
-import { parseMoney } from "@/lib/parseMoney"
 import { Button } from "@/components/ui/button"
 import { Checkbox } from "@/components/ui/checkbox"
 import {
@@ -107,8 +106,15 @@ export const columns: ColumnDef<Payment>[] = [
   },
   {
     id: "actions",
-    cell: ({ row }) => {
-      const payment = row.original
+    cell: ({ row, table }) => {
+      const payment = row.original;
+      // import the function from meta
+      const meta = table?.options?.meta as any;
+      const setSelectedRows = meta?.setSelectedRows;
+
+      const handleSelect = () => {
+        setSelectedRows(payment.id);
+      };
 
       return (
         <DropdownMenu>
@@ -119,15 +125,14 @@ export const columns: ColumnDef<Payment>[] = [
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
-            {/* <DropdownMenuLabel>Actions</DropdownMenuLabel> */}
+            <DropdownMenuLabel>Actions</DropdownMenuLabel>
             <DropdownMenuItem
               onClick={() => navigator.clipboard.writeText(payment.id)}
             >
               Generate QR code
             </DropdownMenuItem>
-            {/* <DropdownMenuSeparator /> */}
-            {/* <DropdownMenuItem>View customer</DropdownMenuItem> */}
-            {/* <DropdownMenuItem>View payment details</DropdownMenuItem> */}
+            <DropdownMenuSeparator />
+            <DropdownMenuItem onClick={handleSelect}>Delete</DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       )
