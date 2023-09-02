@@ -1,65 +1,111 @@
-'use client'
+"use client"
 
-import { GetProducts } from '@/actions/products'
-import Menu from '@/components/menu'
-import { Button } from '@/components/ui/button'
-import useVendorId from '@/hooks/useVendorId'
-import getImageLink from '@/utils/getImageLink'
-import pb from '@/utils/pocketbase'
-import { useQuery } from '@tanstack/react-query'
-import Link from 'next/link'
-import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import React, { useState } from "react"
+import { useRouter } from "next/navigation"
+import { CreateProduct } from "@/actions/products"
+import { useMutation } from "@tanstack/react-query"
+
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import { toast } from "@/components/ui/use-toast"
+import UploadImage from "@/components/UploadImage"
 
 type Props = {}
 
 const Page = (props: Props) => {
+  const router = useRouter()
+  const {
+    mutateAsync: createProduct,
+    isLoading,
+    isError,
+  } = useMutation(CreateProduct)
 
-  const { vendorId } = useVendorId();
+  const [product, setProduct] = useState({
+    product_name: "",
+    product_price: 0,
+    image_url: "",
+    vendor_id: localStorage?.getItem("vendor"),
+  })
 
-  const { data, isLoading, isFetching, error } = useQuery({
-    queryKey: ["hydrate-users"],
-    queryFn: () => pb.collection("Products").getFullList({
-      $autoCancel: false,
-      expand: "image_url,addons_id",
-      filter: `(vendor_id="${vendorId}")`,
-    }),
-    enabled: !!vendorId
-  });
-
-  const sanitizedData = useCallback(() => {
-    if (!data) return []
-
-    return data.map((menu) => ({
-      id: menu.id,
-      product_name: menu.product_name,
-      product_price: menu.product_price,
-      image_url: getImageLink(menu?.expand?.image_url as any),
-      addons: menu?.expand?.addons_id ?? []
-    }))
-  }, [data])
-
-  const productsData = useMemo(() => sanitizedData(), [sanitizedData])
+  const createProductAction = async () => {
+    try {
+      await createProduct({
+        product_name: product.product_name,
+        product_price: product.product_price,
+        image_url: product.image_url,
+        vendor_id: product.vendor_id ?? "",
+      }).then((res) => {
+        router?.push("/admin/product")
+      })
+    } catch (error: any) {
+      toast({
+        variant: "destructive",
+        title: "Uh oh! Something went wrong.",
+        description: error?.message,
+      })
+    }
+  }
 
   return (
-    <div className='w-full'>
-      <div className='flex justify-end'>
-        <Button variant={'admin'}>
-          <Link href={'/admin/product/create'}>
-            Create Product
-          </Link>
-        </Button>
-      </div>
+    <div className="rounded-xl bg-white py-10">
+      <form
+        action={createProductAction}
+        className="m-auto flex flex-col items-center"
+      >
+        <UploadImage
+          setFiles={(file: string) => {
+            setProduct({
+              ...product,
+              image_url: file,
+            })
+          }}
+        />
 
-      <div className='my-14 grid grid-cols-5 gap-5'>
-        {productsData?.map((menu) => (
-          <Menu
-            key={menu?.id}
-            imageUrl={menu?.image_url}
-            name={menu?.product_name}
-            price={menu?.product_price}
-          />
-        ))}
-      </div>
+        <div className="my-10 flex w-full items-center justify-between">
+          <div className="w-full px-8">
+            <Label htmlFor="name">Product Name</Label>
+            <Input
+              required={true}
+              id="name"
+              value={product.product_name}
+              onChange={(e: { target: { value: any } }) => {
+                setProduct({
+                  ...product,
+                  product_name: e.target.value,
+                })
+              }}
+              className="w-full"
+            />
+          </div>
+          <div className="w-full px-8">
+            <Label htmlFor="price">Product Price</Label>
+            <Input
+              required={true}
+              id="price"
+              type="number"
+              value={product.product_price}
+              onChange={(e: { target: { value: string | number } }) => {
+                setProduct({
+                  ...product,
+                  product_price: +e?.target.value,
+                })
+              }}
+              className="w-full"
+            />
+          </div>
+        </div>
+
+        <div className="w-full px-8">
+          <Button
+            disabled={isLoading}
+            type="submit"
+            className=" mt-20 w-full bg-admin"
+          >
+            Create
+          </Button>
+        </div>
+      </form>
     </div>
   )
 }
