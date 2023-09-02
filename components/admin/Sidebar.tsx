@@ -65,44 +65,44 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen, children }: SidebarProps) => {
   const sidebar = useRef<any>(null);
   const pathname = usePathname();
 
-  // const storedSidebarExpanded = localStorage?.getItem('sidebar-expanded');
-  // const [sidebarExpanded, setSidebarExpanded] = useState(
-  //   storedSidebarExpanded === null ? false : storedSidebarExpanded === 'true'
-  // );
+  const storedSidebarExpanded = localStorage?.getItem('sidebar-expanded');
+  const [sidebarExpanded, setSidebarExpanded] = useState(
+    storedSidebarExpanded === null ? false : storedSidebarExpanded === 'true'
+  );
 
-  // // close on click outside
-  // useEffect(() => {
-  //   const clickHandler = ({ target }: MouseEvent) => {
-  //     if (!sidebar.current || !trigger.current) return;
-  //     if (
-  //       !sidebarOpen ||
-  //       sidebar.current.contains(target) ||
-  //       trigger.current.contains(target)
-  //     )
-  //       return;
-  //     setSidebarOpen(false);
-  //   };
-  //   document.addEventListener('click', clickHandler);
-  //   return () => document.removeEventListener('click', clickHandler);
-  // });
+  // close on click outside
+  useEffect(() => {
+    const clickHandler = ({ target }: MouseEvent) => {
+      if (!sidebar.current || !trigger.current) return;
+      if (
+        !sidebarOpen ||
+        sidebar.current.contains(target) ||
+        trigger.current.contains(target)
+      )
+        return;
+      setSidebarOpen(false);
+    };
+    document.addEventListener('click', clickHandler);
+    return () => document.removeEventListener('click', clickHandler);
+  });
 
-  // useEffect(() => {
-  //   const keyHandler = ({ keyCode }: KeyboardEvent) => {
-  //     if (!sidebarOpen || keyCode !== 27) return;
-  //     setSidebarOpen(false);
-  //   };
-  //   document.addEventListener('keydown', keyHandler);
-  //   return () => document.removeEventListener('keydown', keyHandler);
-  // });
+  useEffect(() => {
+    const keyHandler = ({ keyCode }: KeyboardEvent) => {
+      if (!sidebarOpen || keyCode !== 27) return;
+      setSidebarOpen(false);
+    };
+    document.addEventListener('keydown', keyHandler);
+    return () => document.removeEventListener('keydown', keyHandler);
+  });
 
-  // useEffect(() => {
-  //   localStorage.setItem('sidebar-expanded', sidebarExpanded.toString());
-  //   if (sidebarExpanded) {
-  //     document.querySelector('body')?.classList.add('sidebar-expanded');
-  //   } else {
-  //     document.querySelector('body')?.classList.remove('sidebar-expanded');
-  //   }
-  // }, [sidebarExpanded]);
+  useEffect(() => {
+    localStorage.setItem('sidebar-expanded', sidebarExpanded.toString());
+    if (sidebarExpanded) {
+      document.querySelector('body')?.classList.add('sidebar-expanded');
+    } else {
+      document.querySelector('body')?.classList.remove('sidebar-expanded');
+    }
+  }, [sidebarExpanded]);
 
   const logout = async () => {
     await Logout();
@@ -111,7 +111,6 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen, children }: SidebarProps) => {
   }
 
   const getModuleName = (pathname: string) => {
-    // get the module name from the pathname and capitalize the first letter
     const moduleName = pathname.split('/')[2];
     return moduleName.charAt(0).toUpperCase() + moduleName.slice(1);
   }
@@ -120,13 +119,15 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen, children }: SidebarProps) => {
     <div className='relative flex w-full'>
       <aside
         ref={sidebar}
-        className={`z-9999 fixed inset-y-0 left-0 flex h-screen w-[300px] flex-col overflow-y-hidden bg-admin duration-300 ease-linear lg:translate-x-0${sidebarOpen ? 'translate-x-0' : '-translate-x-full'
-          } py-10`}
+        className={`z-9999 fixed inset-y-0 left-0 flex h-screen ${sidebarOpen ? 'w-[300px]' : 'w-[110px]'} flex-col overflow-y-hidden bg-admin duration-300 ease-linear
+           py-10`}
       >
-        <div className="py-5.5 lg:py-6.5 flex items-center justify-between gap-2 px-6">
-          <Link href="/admin/dashboard">
-            <Image src={'/logo.png'} alt="Logo" width={300} height={300} priority={true} />
-          </Link>
+        <div className={`py-5.5 lg:py-6.5 ${sidebarOpen ? 'flex justify-between' : 'flex justify-center'} items-center gap-2 px-6`}>
+          {sidebarOpen && (
+            <Link href="/admin/dashboard">
+              <Image src={'/logo.png'} alt="Logo" width={300} height={300} priority={true} />
+            </Link>
+          )}
 
           <button
             ref={trigger}
@@ -152,7 +153,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen, children }: SidebarProps) => {
         {/* <!-- SIDEBAR HEADER --> */}
 
         <div className="no-scrollbar flex flex-col overflow-y-auto text-white duration-300 ease-linear">
-          <nav className="mt-5 p-4 lg:mt-9 lg:px-6">
+          <nav className={`mt-5 p-4 lg:mt-9 lg:px-6 ${sidebarOpen ? '' : 'flex flex-col justify-center text-center'}`}>
             {LinkItems.map((item, index) => (
               <div key={index}>
                 <h1>{item.module}</h1>
@@ -164,6 +165,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen, children }: SidebarProps) => {
                       href={item.href}
                       label={item.name}
                       icon={item.icon}
+                      showLabel={sidebarOpen}
                     />
                   ))}
                 </div>
@@ -173,7 +175,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen, children }: SidebarProps) => {
         </div>
       </aside>
 
-      <main className='ml-[300px] w-full bg-[#F6F7FB] p-10'>
+      <main className={`${sidebarOpen ? 'ml-[300px]' : 'ml-[110px]'} w-full bg-[#F6F7FB] p-10 duration-300 ease-linear`}>
         <div className='mb-10 flex items-center justify-between'>
           <h1 className='text-4xl font-bold'>{getModuleName(pathname)}</h1>
           <Icons.bell className='h-10 w-10 rounded-full bg-white p-2' />
