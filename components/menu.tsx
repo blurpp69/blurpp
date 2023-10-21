@@ -13,12 +13,11 @@ type Props = {
 const Menu = (props: Props) => {
   return (
     <Card onClick={props.onClick} className='mx-auto max-h-[250px] max-w-[150px] rounded-[25px]'>
-      <Image
+      <img
         src={props.imageUrl}
         alt={props.name}
         width={150}
         height={150}
-        priority={true}
         className='max-h-[150px] rounded-[25px] object-cover p-2'
       />
       <CardContent className='p-3'>
