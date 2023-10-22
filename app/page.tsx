@@ -52,6 +52,10 @@ export default function IndexPage() {
       />
       <Header
         promoData={promoData}
+        onClick={(menu: any) => {
+          setProduct(menu)
+          setOpenDrawer(true)
+        }}
       />
       <div>
         <h1 className="font-bold">Menu</h1>

@@ -7,6 +7,7 @@ import { parseMoney } from "@/lib/parseMoney"
 
 type Props = {
   promoData: any
+  onClick?: (menu: any) => void,
 }
 
 const Header = (props: Props) => {
@@ -58,7 +59,7 @@ const Header = (props: Props) => {
         <h1 className="font-bold">Promo</h1>
         <div className="flex items-center gap-3 my-2 overflow-x-auto">
           {props.promoData?.map((menu: any) => (
-            <Card className="rounded-xl min-w-max">
+            <Card className="rounded-xl min-w-max" onClick={() => props?.onClick?.(menu)}>
               <CardContent className="p-3">
                 <div className="relative">
                   <img

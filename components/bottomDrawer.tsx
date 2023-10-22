@@ -46,7 +46,7 @@ export function BottomDrawer(props: Props) {
       <SheetContent side={'bottom'} className="rounded-t-[25px]">
         <SheetHeader className="flex-row items-center justify-between">
           <SheetTitle className="max-w-[50%] break-all text-start">{product?.product_name}</SheetTitle>
-          <SheetTitle>{parseMoney(product.product_price)}</SheetTitle>
+          <SheetTitle>{parseMoney(product.discount_price ?? product?.product_price)}</SheetTitle>
         </SheetHeader>
         <div className="mt-3">
           {product?.addons?.length > 0 && (
@@ -70,7 +70,10 @@ export function BottomDrawer(props: Props) {
         </div>
         <SheetFooter className="mt-3 flex-row items-center justify-between">
           <Button className="mr-1 w-1/4 rounded-xl bg-secondary py-6 text-black">Cancel</Button>
-          <Button className="ml-1 w-3/4 rounded-xl py-6" onClick={() => addToCart(selectedProduct)}>Add to cart</Button>
+          <Button className="ml-1 w-3/4 rounded-xl py-6" onClick={() => {
+            props?.onOpenChange?.(false)
+            addToCart(selectedProduct)
+          }}>Add to cart</Button>
         </SheetFooter>
       </SheetContent>
     </Sheet>
