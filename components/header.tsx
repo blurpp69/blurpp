@@ -60,7 +60,7 @@ const Header = (props: Props) => {
         <div className="flex items-center gap-3 my-2 overflow-x-auto">
           {props.promoData?.map((menu: any) => (
             <Card className="rounded-xl min-w-max" onClick={() => props?.onClick?.(menu)}>
-              <CardContent className="p-3">
+              <CardContent className="p-3 max-w-[200px]">
                 <div className="relative">
                   <img
                     src={menu?.image_url}
