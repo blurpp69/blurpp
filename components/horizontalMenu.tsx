@@ -17,7 +17,7 @@ type Props = {
 const HorizontalMenu = (props: Props) => {
   return (
     <div className='my-5 flex items-center justify-between'>
-      <Image
+      <img
         src={props?.imageUrl}
         alt={props.name}
         width={70}

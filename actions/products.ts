@@ -9,12 +9,11 @@ interface Product {
   vendor_id: string,
 }
 
-export async function GetProducts(vendor_id: string) {
+export async function GetProducts() {
   try {
     return pb.collection("Products").getFullList({
       $autoCancel: false,
       expand: "image_url,addons_id",
-      filter: `(vendor_id="${vendor_id}")`,
     })
   } catch (error) {
     console.log(error)
